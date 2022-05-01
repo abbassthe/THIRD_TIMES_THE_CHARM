@@ -9,7 +9,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup
 import json
@@ -144,7 +143,7 @@ class account(Resource):
                   commentReplyLink = soup.select_one("._4sxc._42ft")
                   commentDate = soup.select_one("a._6qw7 abbr")
                   acc= soup.select_one("a._3mf5._3mg0")['href']
-                  pic = soup.select_one('img._3me-._3mf1.img')['href']
+                  pic = soup.select_one("img._3me-._3mf1.img")['src']
                   # print("Author: " + authorComment.text)
                   # print("Date: " + commentDate.get("data-utime"))
 
@@ -221,10 +220,9 @@ class account(Resource):
                   json.dump(datas, outfile)
             except:
                 pass
-
             #driver.close()
             #driver.quit()
-            return datas
+            return "stay_positive"
         return doscrape(driver)
 
 api.add_resource(account, "/account")
