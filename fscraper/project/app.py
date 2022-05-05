@@ -1,6 +1,7 @@
 import os
 import threading
 from flask import Flask
+from flask import request
 from flask_restful import Api, Resource, reqparse,  fields, marshal_with
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -21,7 +22,7 @@ def __repr__(self):
 #		return f"Video(name = {name}, views = {views}, likes = {likes})"
 
 account_put_args = reqparse.RequestParser()
-account_put_args.add_argument("list", action="split", help="list url of the account is required", required=True)
+account_put_args.add_argument("list", action="append", help="list url of the account is required", required=True)
 
 resource_fields = {
 	'url': fields.String
@@ -168,15 +169,15 @@ for i in range(int(max_threads)):
   driver_pool.append(setup_driver())
 class account(Resource):
 
-    @marshal_with(resource_fields)
+
     def get(self):
         pass
 
-    @marshal_with(resource_fields)
+    
     def post(self):
       data = []
-      args = account_put_args.parse_args()
-      list = args['list']
+      list = request.json['list']
+      print(list)
       for url in list : 
        while len(driver_pool) == 0:
            time.sleep(0.2)
