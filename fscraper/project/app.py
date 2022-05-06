@@ -12,6 +12,8 @@ import time
 import random
 import time
 
+from sqlalchemy import true
+
 #https://www.facebook.com/jumpstarttesting/posts/117961834176064?comment_id=117964500842464s
 datarow = []
 app = Flask(__name__)
@@ -37,7 +39,7 @@ def setup_driver():
     chrome_options = webdriver.ChromeOptions()
     prefs = {"profile.default_content_setting_values.notifications" : 2}
     chrome_options.add_experimental_option("prefs",prefs)
-    #chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
     driver = webdriver.Chrome(executable_path=chromedriverpath,chrome_options=chrome_options)
     return driver
 def doscrape(url,driver,driver_pool,data):
@@ -184,7 +186,7 @@ class account(Resource):
        this_driver = driver_pool[0]
        del driver_pool[0]
        threading.Thread(target=doscrape, args=[url,this_driver,driver_pool,data]).start()
-      while threading.active_count() != 0:
+      while len(driver_pool) != int(max_threads):
         time.sleep(0.2)
       return data
 
