@@ -1,5 +1,6 @@
 import os
 import threading
+import uuid
 from flask import Flask
 from flask import request
 from flask_restful import Api, Resource, reqparse,  fields, marshal_with
@@ -15,9 +16,9 @@ import time
 from sqlalchemy import true
 
 #https://www.facebook.com/jumpstarttesting/posts/117961834176064?comment_id=117964500842464s
-datarow = []
 app = Flask(__name__)
 api = Api(app)
+data = {}
 
 def __repr__(self):
     pass
@@ -39,10 +40,10 @@ def setup_driver():
     chrome_options = webdriver.ChromeOptions()
     prefs = {"profile.default_content_setting_values.notifications" : 2}
     chrome_options.add_experimental_option("prefs",prefs)
-    chrome_options.add_argument("--headless")
+    #chrome_options.add_argument("--headless")
     driver = webdriver.Chrome(executable_path=chromedriverpath,chrome_options=chrome_options)
     return driver
-def doscrape(url,driver,driver_pool,data):
+def doscrape(url,driver,driver_pool,datakey):
     #try:
     #    driver.get("https://www.facebook.com")
     #    username = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='email']")))
@@ -163,32 +164,32 @@ def doscrape(url,driver,driver_pool,data):
     #driver.close()
     #driver.quit()
     driver_pool.append(driver)
-    data.append(datas)
+    data[datakey].append(datas)
     return
 accounts = {}
 driver_pool = []
 for i in range(int(max_threads)):
   driver_pool.append(setup_driver())
 class account(Resource):
-
-
+    requestkey = 0
     def get(self):
         pass
-
-    
     def post(self):
-      data = []
-      list = request.json['list']
-      print(list)
+      requestkey = self.requestkey
+      self.requestkey += 1
+      list = request.json["list"]
+      data[requestkey] = []
       for url in list : 
        while len(driver_pool) == 0:
            time.sleep(0.2)
        this_driver = driver_pool[0]
        del driver_pool[0]
-       threading.Thread(target=doscrape, args=[url,this_driver,driver_pool,data]).start()
+       threading.Thread(target=doscrape, args=[url,this_driver,driver_pool,requestkey]).start()
       while len(driver_pool) != int(max_threads):
         time.sleep(0.2)
-      return data
+      data_to_return = data[requestkey].copy()
+      del data[requestkey]
+      return data_to_return
 
 api.add_resource(account, "/account")
 
