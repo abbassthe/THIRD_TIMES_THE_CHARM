@@ -157,8 +157,6 @@ def doscrape(url,driver,driver_pool,datakey):
               comment['replies'].append(replyDict)
               counterId += 1
           datas.append(comment)
-        with open('data.json', 'w') as outfile:
-          json.dump(datas, outfile)
     except:
         pass
     #driver.close()
