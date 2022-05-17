@@ -44,21 +44,6 @@ def setup_driver():
     driver = webdriver.Chrome(executable_path=chromedriverpath,chrome_options=chrome_options)
     return driver
 def doscrape(url,driver,driver_pool,datakey):
-    #try:
-    #    driver.get("https://www.facebook.com")
-    #    username = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='email']")))
-    #    password = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='pass']")))
-    #    time.sleep(random_float(0.5,2))
-    #    username.clear()
-    #    username.send_keys("majholmeme@gmail.com")
-    #    time.sleep(random_float(0.5,2))
-    #    password.clear() 
-    #    password.send_keys("mhmdashek445")
-    #    time.sleep(random_float(0.5,2))
-    #    button = WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))).click()
-    #    time.sleep(random_float(0.5,2))
-    #except Exception as e:
-    #    print('error: ', e)
     datas= []
     try:
         driver.get(url)
